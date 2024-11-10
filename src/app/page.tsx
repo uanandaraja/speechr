@@ -1,8 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 
 export default function Home() {
+  const { refetch: startGoogleAuth, isFetching } = useGoogleAuth();
+
+  const handleLogin = () => {
+    startGoogleAuth();
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex"></div>
@@ -12,9 +19,9 @@ export default function Home() {
           Hey! Let&apos;s lock in for the day.
         </p>
 
-        <div>
-          <Button>Lock In</Button>
-        </div>
+        <Button onClick={handleLogin} disabled={isFetching}>
+          {isFetching ? "Redirecting..." : "Lock In"}
+        </Button>
       </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left"></div>
