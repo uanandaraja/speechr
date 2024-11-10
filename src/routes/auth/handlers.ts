@@ -10,7 +10,7 @@ import { OAuth2RequestError } from "arctic";
 import { getDbClient } from "@/db";
 import { userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { setCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 
 interface GoogleUserInfo {
   id: string;
@@ -181,4 +181,26 @@ export async function handleGoogleCallback(c: Context) {
       500,
     );
   }
+}
+
+export async function handleLogout(c: Context) {
+  const { env } = getRequestContext();
+  const sessionId = getCookie(c, "session");
+
+  if (sessionId) {
+    // Delete session from KV
+    await env.HABITKU_AUTH_KV.delete(`session:${sessionId}`);
+
+    // Clear cookie
+    setCookie(c, "session", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Lax",
+      path: "/",
+      expires: new Date(0),
+      domain: new URL(env.CLIENT_REDIRECT_URL).hostname,
+    });
+  }
+
+  return c.json({ status: "success" });
 }
