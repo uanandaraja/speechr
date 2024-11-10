@@ -1,12 +1,10 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "habitku"
-main = ".worker-next/index.mjs"
 
-compatibility_date = "2024-09-26"
+compatibility_date = "2024-07-29"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
-# Minification helps to keep the Worker bundle size down and improve start up time.
-minify = true
-
-# Use the new Workers + Assets to host the static frontend files
-assets = { directory = ".worker-next/assets", binding = "ASSETS" }
+[[kv_namespaces]]
+binding = "HABITKU_AUTH_KV"
+id = "3def8e1f81194e7981644c51e81a74af"

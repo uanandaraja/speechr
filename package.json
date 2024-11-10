@@ -7,14 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "cloudflare && wrangler deploy",
-    "preview": "cloudflare && wrangler dev",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "preview": "npm run pages:build && wrangler pages dev",
+    "deploy": "npm run pages:build && wrangler pages deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
     "generate": "drizzle-kit generate --config=drizzle.config.local.ts",
     "migrate": "tsx scripts/migrate.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
+    "arctic": "^2.2.2",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.28.0",
     "drizzle-orm": "^0.36.1",
@@ -25,8 +29,8 @@
     "tsx": "^4.19.2"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.5",
     "@cloudflare/workers-types": "^4.20241106.0",
-    "@opennextjs/cloudflare": "^0.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -38,4 +42,3 @@
     "wrangler": "^3.86.0"
   }
 }
-
