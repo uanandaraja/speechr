@@ -22,7 +22,7 @@ interface GoogleUserInfo {
 
 export async function handleGoogleLogin(c: Context) {
   const { env } = getRequestContext();
-  const google = createGoogle(env);
+  const google = createGoogle();
   const state = generateState();
   const codeVerifier = generateCodeVerifier();
   const url = google.createAuthorizationURL(state, codeVerifier, [
@@ -47,7 +47,7 @@ export async function handleGoogleLogin(c: Context) {
 
 export async function handleGoogleCallback(c: Context) {
   const { env } = getRequestContext();
-  const google = createGoogle(env);
+  const google = createGoogle();
   const code = c.req.query("code");
   const state = c.req.query("state");
 
@@ -143,7 +143,7 @@ export async function handleGoogleCallback(c: Context) {
     }
 
     const sessionToken = generateSessionToken();
-    const session = await createSession(c, sessionToken, userId);
+    const session = await createSession(sessionToken, userId);
 
     // Store session in KV
     await authKV.put(
