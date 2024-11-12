@@ -43,7 +43,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-16">
       <h1 className="text-2xl font-bold mb-8">Welcome, {user?.name}</h1>
 
       <div className="flex gap-4 mb-8">

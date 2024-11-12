@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getRelativeTime } from "@/lib/dateUtils";
 
 interface Tracking {
   id: string;
@@ -51,6 +52,38 @@ export function HabitCard({
     return dates;
   };
 
+  const getStreak = () => {
+    const sortedTracking = [...tracking].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+
+    let streak = 0;
+    const today = new Date().toDateString();
+
+    // Check if completed today or not
+    const lastCompletedDate = sortedTracking[0]
+      ? new Date(sortedTracking[0].date).toDateString()
+      : null;
+
+    if (lastCompletedDate === today) {
+      streak = 1;
+
+      // Count previous consecutive days
+      for (let i = 1; i < sortedTracking.length; i++) {
+        const currentDate = new Date(sortedTracking[i].date);
+        const prevDate = new Date(sortedTracking[i - 1].date);
+
+        const timeDiff = Math.abs(prevDate.getTime() - currentDate.getTime());
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+        if (daysDiff === 1) streak++;
+        else break;
+      }
+    }
+
+    return streak;
+  };
+
   return (
     <Card className="p-4">
       <div className="flex justify-between items-center">
@@ -67,18 +100,19 @@ export function HabitCard({
               Loading...
             </span>
           ) : completed ? (
-            <span className="flex items-center">
-              <Check className="mr-2 h-4 w-4" />
-              Completed
-            </span>
+            <span className="flex items-center">💪</span>
           ) : (
-            "Mark Complete"
+            "✅"
           )}
         </Button>
       </div>
 
-      <div className="text-sm text-gray-500 mt-1">
-        Started {new Date(createdAt).toLocaleDateString()}
+      <div className="text-sm text-gray-500 mt-1 flex gap-2">
+        <div>Started {getRelativeTime(createdAt)}</div>
+        <p>|</p>
+        {getStreak() > 0
+          ? `${getStreak()} days streak 🔥`
+          : "Start your streak today!"}
       </div>
 
       <div className="mt-4 flex flex-wrap gap-1">
