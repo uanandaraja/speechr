@@ -30,7 +30,7 @@ export async function handleGoogleLogin(c: Context) {
     "email",
   ]);
 
-  const authKV = env.HABITKU_AUTH_KV;
+  const authKV = env.SPEECHR_AUTH_KV;
   await authKV.put(
     `oauth_state:${state}`,
     JSON.stringify({
@@ -58,7 +58,7 @@ export async function handleGoogleCallback(c: Context) {
     return c.text("Invalid request: Missing code or state", 400);
   }
 
-  const authKV = env.HABITKU_AUTH_KV;
+  const authKV = env.SPEECHR_AUTH_KV;
 
   const storedData = await authKV.get(`oauth_state:${state}`);
   if (!storedData) {
@@ -189,7 +189,7 @@ export async function handleLogout(c: Context) {
 
   if (sessionId) {
     // Delete session from KV
-    await env.HABITKU_AUTH_KV.delete(`session:${sessionId}`);
+    await env.SPEECHR_AUTH_KV.delete(`session:${sessionId}`);
 
     // Clear cookie
     setCookie(c, "session", "", {

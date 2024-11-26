@@ -10,7 +10,7 @@ export async function authenticateUser(c: Context, next: Next) {
     return c.json({ error: "Unauthorized" }, 401);
   }
 
-  const session = await env.HABITKU_AUTH_KV.get(`session:${sessionId}`);
+  const session = await env.SPEECHR_AUTH_KV.get(`session:${sessionId}`);
   if (!session) {
     return c.json({ error: "Unauthorized" }, 401);
   }
