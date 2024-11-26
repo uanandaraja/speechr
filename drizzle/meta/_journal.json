@@ -8,6 +8,13 @@
       "when": 1732630671672,
       "tag": "0000_flimsy_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1732634333461,
+      "tag": "0001_new_squadron_supreme",
+      "breakpoints": true
     }
   ]
 }

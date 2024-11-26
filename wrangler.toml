@@ -1,10 +1,10 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "habitku"
+name = "speechr"
 
 compatibility_date = "2024-07-29"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
 [[kv_namespaces]]
-binding = "HABITKU_AUTH_KV"
-id = "3def8e1f81194e7981644c51e81a74af"
+binding = "SPEECHR_AUTH_KV"
+id = "98f7e9ee70fa411a909d31798ca5e11a"
