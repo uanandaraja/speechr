@@ -1,6 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import type { InferSelectModel } from "drizzle-orm";
-import { relations } from "drizzle-orm";
 
 export const userTable = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -21,37 +20,5 @@ export const sessionTable = sqliteTable("session", {
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
 });
 
-export const habitTable = sqliteTable("habit", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => userTable.id),
-  name: text("name").notNull(),
-  description: text("description"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-});
-
-export const trackingTable = sqliteTable("tracking", {
-  id: text("id").primaryKey(),
-  habitId: text("habit_id")
-    .notNull()
-    .references(() => habitTable.id),
-  date: integer("date", { mode: "timestamp" }).notNull(),
-  completed: integer("completed", { mode: "boolean" }).notNull(),
-});
-
-export const habitRelations = relations(habitTable, ({ many }: any) => ({
-  tracking: many(trackingTable),
-}));
-
-export const trackingRelations = relations(trackingTable, ({ one }: any) => ({
-  habit: one(habitTable, {
-    fields: [trackingTable.habitId],
-    references: [habitTable.id],
-  }),
-}));
-
 export type User = InferSelectModel<typeof userTable>;
 export type Session = InferSelectModel<typeof sessionTable>;
-export type Habit = InferSelectModel<typeof habitTable>;
-export type Tracking = InferSelectModel<typeof trackingTable>;
