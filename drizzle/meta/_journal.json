@@ -15,6 +15,13 @@
       "when": 1732634333461,
       "tag": "0001_new_squadron_supreme",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1732637839944,
+      "tag": "0002_absent_daimon_hellstrom",
+      "breakpoints": true
     }
   ]
 }

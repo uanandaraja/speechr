@@ -1,0 +1,1 @@
+ALTER TABLE `generated_audio` ADD `file_key` text;

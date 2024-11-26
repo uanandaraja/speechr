@@ -33,6 +33,7 @@ export const generatedAudioTable = sqliteTable("generated_audio", {
     .notNull()
     .references(() => userTable.id),
   generatedAudioUrl: text("generated_audio_url"),
+  fileKey: text("file_key"),
   generatedAudioText: text("generated_audio_text").notNull(),
   voiceId: text("voice_id")
     .notNull()
