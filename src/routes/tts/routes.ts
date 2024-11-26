@@ -12,6 +12,6 @@ const ttsRouter = new Hono();
 ttsRouter.post("/", authenticateUser, createAudioGeneration);
 ttsRouter.get("/status/:id", authenticateUser, getGenerationStatus);
 ttsRouter.get("/:id", authenticateUser, getGeneratedAudio);
-ttsRouter.post("/callback", authenticateUser, handleCallback);
+ttsRouter.post("/callback", handleCallback);
 
 export default ttsRouter;

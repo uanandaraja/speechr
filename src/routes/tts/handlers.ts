@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 const TTS_PROVIDER_URL = process.env.TTS_PROVIDER_URL;
-const TTS_CALLBACK_URL = process.env.CALLBACK_URL;
+const TTS_CALLBACK_URL = process.env.TTS_CALLBACK_URL;
 
 export async function createAudioGeneration(c: Context) {
   const userId = c.get("userId");
@@ -36,14 +36,18 @@ export async function createAudioGeneration(c: Context) {
     throw new Error("TTS_PROVIDER_URL is not defined");
   }
 
+  const formData = new FormData();
+  formData.append("generated_audio_id", generatedAudio.id);
+  formData.append("audio_url", voice.voiceAudioUrl);
+  formData.append("reference_text", voice.voiceReferenceText);
+  formData.append("callback_url", `${TTS_CALLBACK_URL}`);
+  formData.append("text_to_generate", text_to_generate);
+
+  console.log(TTS_CALLBACK_URL);
+
   fetch(TTS_PROVIDER_URL, {
     method: "POST",
-    body: JSON.stringify({
-      audio_url: voice.voiceAudioUrl,
-      reference_text: voice.voiceReferenceText,
-      callback_url: `${TTS_CALLBACK_URL}`,
-      text_to_generate: text_to_generate,
-    }),
+    body: formData,
   }).catch(async (error) => {
     console.error(error);
     await db
@@ -86,26 +90,25 @@ export async function getGeneratedAudio(c: Context) {
 }
 
 export async function handleCallback(c: Context) {
-  const { generated_audio_id, audio_url } = await c.req.json();
+  const body = await c.req.json();
+  const { generated_audio_id, audio_url, file_key, status } = body;
+
+  if (!generated_audio_id) {
+    return c.json({ error: "Missing generated_audio_id" }, 400);
+  }
+
   const db = getDbClient();
+  const updates: any = { status };
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(generatedAudioTable)
-      .set({
-        status: "complete",
-        generatedAudioUrl: audio_url,
-      })
-      .where(eq(generatedAudioTable.id, generated_audio_id));
+  if (audio_url) updates.generatedAudioUrl = audio_url;
+  if (file_key) updates.fileKey = file_key;
 
-    await tx
-      .update(queueTable)
-      .set({
-        status: "completed",
-        completedAt: new Date(),
-      })
-      .where(eq(queueTable.generatedAudioId, generated_audio_id));
-  });
+  console.log(body);
+
+  await db
+    .update(generatedAudioTable)
+    .set(updates)
+    .where(eq(generatedAudioTable.id, generated_audio_id));
 
   return c.json({ success: true });
 }
