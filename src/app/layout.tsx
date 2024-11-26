@@ -7,8 +7,8 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Habitku",
-  description: "Where I track my habit",
+  title: "Speechr",
+  description: "Narrate everything",
 };
 
 export default function RootLayout({
