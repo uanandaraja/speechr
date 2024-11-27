@@ -1,5 +1,6 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import type { InferSelectModel } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 
 export const userTable = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -43,6 +44,20 @@ export const generatedAudioTable = sqliteTable("generated_audio", {
   deleteAt: integer("delete_at", { mode: "timestamp" }),
   numOfCharacters: integer("num_of_characters").notNull(),
 });
+
+export const generatedAudioRelations = relations(
+  generatedAudioTable,
+  ({ one }) => ({
+    voice: one(voiceTable, {
+      fields: [generatedAudioTable.voiceId],
+      references: [voiceTable.id],
+    }),
+  }),
+);
+
+export const voiceRelations = relations(voiceTable, ({ many }) => ({
+  generatedAudio: many(generatedAudioTable),
+}));
 
 export const queueTable = sqliteTable("queue", {
   id: text("id").primaryKey(),

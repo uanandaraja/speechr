@@ -89,6 +89,21 @@ export async function getGeneratedAudio(c: Context) {
   return c.json(audio);
 }
 
+export async function getAllGeneratedAudio(c: Context) {
+  const userId = c.get("userId");
+  const db = getDbClient();
+
+  const audio = await db.query.generatedAudioTable.findMany({
+    where: eq(generatedAudioTable.userId, userId),
+    with: { voice: true },
+    orderBy: (generatedAudioTable, { desc }) => [
+      desc(generatedAudioTable.createdAt),
+    ],
+  });
+
+  return c.json(audio);
+}
+
 export async function handleCallback(c: Context) {
   const body = await c.req.json();
   const { generated_audio_id, audio_url, file_key, status } = body;
@@ -111,4 +126,12 @@ export async function handleCallback(c: Context) {
     .where(eq(generatedAudioTable.id, generated_audio_id));
 
   return c.json({ success: true });
+}
+
+export async function getPresignedUrl(c: Context) {
+  const key = decodeURIComponent(c.req.param("key"));
+  const r2 = c.env.STORAGE;
+
+  const url = await r2.get(key).presignedUrl;
+  return c.json({ url });
 }
