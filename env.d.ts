@@ -10,4 +10,5 @@ interface CloudflareEnv {
 	CLIENT_REDIRECT_URL: string;
 	TTS_PROVIDER_URL: string;
 	TTS_CALLBACK_URL: string;
+	STORAGE: R2Bucket;
 }

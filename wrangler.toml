@@ -8,3 +8,7 @@ pages_build_output_dir = ".vercel/output/static"
 [[kv_namespaces]]
 binding = "SPEECHR_AUTH_KV"
 id = "98f7e9ee70fa411a909d31798ca5e11a"
+
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "storage"
