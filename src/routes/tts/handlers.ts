@@ -128,23 +128,3 @@ export async function handleCallback(c: Context) {
 
   return c.json({ success: true });
 }
-
-export async function getPresignedUrl(c: Context) {
-  const { env } = getRequestContext();
-  const key = decodeURIComponent(c.req.param("key"));
-  const r2 = env.STORAGE;
-
-  const obj = await r2.get(key);
-  if (!obj) {
-    return c.json(
-      {
-        error: "Object not found",
-        requestedKey: key,
-      },
-      404,
-    );
-  }
-
-  const url = URL.createObjectURL(await obj.blob());
-  return c.json({ url });
-}

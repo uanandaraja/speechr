@@ -3,12 +3,6 @@
 import Image from "next/image";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useGetGeneratedAudio } from "@/hooks/tts/useGetAllGeneratedAudio";
-import { useGetPresignedUrl } from "@/hooks/tts/useGetPresignedUrl";
-import { GeneratedAudio } from "@/types";
-
-interface AudioItemProps {
-  audio: GeneratedAudio;
-}
 
 export default function Dashboard() {
   const {
@@ -50,28 +44,23 @@ export default function Dashboard() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Your Generated Audio</h3>
           {generatedAudio?.map((audio) => (
-            <AudioItem key={audio.id} audio={audio} />
+            <div key={audio.id} className="bg-gray-800 p-4 rounded-lg">
+              <p>
+                {audio.generatedAudioText.length > 50
+                  ? audio.generatedAudioText.slice(0, 50) + "..."
+                  : audio.generatedAudioText}
+              </p>
+              {audio.generatedAudioUrl && (
+                <audio
+                  controls
+                  src={audio.generatedAudioUrl}
+                  className="mt-2"
+                />
+              )}
+            </div>
           ))}
         </div>
       </main>
-    </div>
-  );
-}
-
-function AudioItem({ audio }: AudioItemProps) {
-  const { data: presignedUrl } = useGetPresignedUrl(audio.fileKey ?? "");
-
-  return (
-    <div className="bg-gray-800 p-4 rounded-lg">
-      <p>
-        {audio.generatedAudioText.length > 50
-          ? audio.generatedAudioText.slice(0, 50) + "..."
-          : audio.generatedAudioText}
-      </p>
-      <p className="text-sm text-gray-400">Status: {audio.status}</p>
-      {audio.status === "completed" && presignedUrl?.url && (
-        <audio controls src={presignedUrl.url} className="mt-2 w-full" />
-      )}
     </div>
   );
 }
