@@ -145,8 +145,6 @@ export async function getPresignedUrl(c: Context) {
     );
   }
 
-  return c.json({
-    url: obj.body,
-    metadata: obj.httpMetadata,
-  });
+  const url = URL.createObjectURL(await obj.blob());
+  return c.json({ url });
 }
