@@ -3,6 +3,7 @@ import { getDbClient } from "@/db";
 import { voiceTable, generatedAudioTable, queueTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 const TTS_PROVIDER_URL = process.env.TTS_PROVIDER_URL;
 const TTS_CALLBACK_URL = process.env.TTS_CALLBACK_URL;
@@ -129,9 +130,23 @@ export async function handleCallback(c: Context) {
 }
 
 export async function getPresignedUrl(c: Context) {
+  const { env } = getRequestContext();
   const key = decodeURIComponent(c.req.param("key"));
-  const r2 = c.env.STORAGE;
+  const r2 = env.STORAGE;
 
-  const url = await r2.get(key).presignedUrl;
-  return c.json({ url });
+  const obj = await r2.get(key);
+  if (!obj) {
+    return c.json(
+      {
+        error: "Object not found",
+        requestedKey: key,
+      },
+      404,
+    );
+  }
+
+  return c.json({
+    url: obj.body,
+    metadata: obj.httpMetadata,
+  });
 }

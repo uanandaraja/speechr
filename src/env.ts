@@ -6,6 +6,7 @@ export interface Env {
   GOOGLE_REDIRECT_URI: string;
   CLIENT_REDIRECT_URL: string;
   SPEECHR_AUTH_KV: string;
+  STORAGE: string;
   TTS_PROVIDER_URL: string;
   TTS_CALLBACK_URL: string;
 }
