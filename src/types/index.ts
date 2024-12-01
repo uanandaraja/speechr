@@ -15,3 +15,10 @@ export interface GeneratedAudio {
     voiceReferenceText: string;
   };
 }
+
+export interface Voice {
+  id: string;
+  voiceName: string;
+  voiceAudioUrl: string;
+  voiceReferenceText: string;
+}

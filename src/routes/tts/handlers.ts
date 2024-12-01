@@ -1,6 +1,6 @@
 import { Context } from "hono";
 import { getDbClient } from "@/db";
-import { voiceTable, generatedAudioTable, queueTable } from "@/db/schema";
+import { voiceTable, generatedAudioTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getRequestContext } from "@cloudflare/next-on-pages";
@@ -101,6 +101,12 @@ export async function getAllGeneratedAudio(c: Context) {
   });
 
   return c.json(audio);
+}
+
+export async function getAllVoices(c: Context) {
+  const db = getDbClient();
+  const voices = await db.query.voiceTable.findMany();
+  return c.json(voices);
 }
 
 export async function handleCallback(c: Context) {
