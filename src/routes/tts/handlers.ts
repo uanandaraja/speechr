@@ -44,8 +44,6 @@ export async function createAudioGeneration(c: Context) {
   formData.append("callback_url", `${TTS_CALLBACK_URL}`);
   formData.append("text_to_generate", text_to_generate);
 
-  console.log(TTS_CALLBACK_URL);
-
   fetch(TTS_PROVIDER_URL, {
     method: "POST",
     body: formData,
